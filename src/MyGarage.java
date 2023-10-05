@@ -24,7 +24,7 @@ public class MyGarage implements Garage{
 
     @Override
     public Collection<Car> topThreeCarsByMaxVelocity() {
-        ArrayList<Car> topCars = new ArrayList<>();
+        List<Car> topCars = new ArrayList<>();
         var topCar = carsByVelocity.first();
         for (int i = 0; i < 3; i++) {
             if (topCar == null) {
