@@ -1,5 +1,7 @@
 import java.util.*;
 
+import static java.lang.Integer.MAX_VALUE;
+
 public class MyGarage implements Garage{
     private TreeSet<Car> carsByVelocity;
     private HashMap<Owner, HashSet<Car>> carsOfOwner;
@@ -8,6 +10,8 @@ public class MyGarage implements Garage{
     private HashMap<Integer, Owner> ownerOfCar;
 
     private HashMap<Integer, Car> carWithId;
+
+    private TreeSet<Car> carsByPower = new TreeSet<>(new SortByPower());
 
     public MyGarage() {
         carsByVelocity = new TreeSet<Car>(new SortByVelocity());
@@ -43,13 +47,8 @@ public class MyGarage implements Garage{
 
     @Override
     public Collection<Car> carsWithPowerMoreThan(int power) {
-        var result = new ArrayList<Car>();
-        for (var car : carsByVelocity) {
-            if (car.getPower() > power) {
-                result.add(car);
-            }
-        }
-        return result;
+        var fakeCar = new Car(MAX_VALUE, "", "", -1, power, -1);
+        return carsByPower.tailSet(fakeCar);
     }
 
     @Override
@@ -96,6 +95,7 @@ public class MyGarage implements Garage{
         if (carsOfBrand.get(car.getBrand()).isEmpty()) {
             carsOfBrand.remove(car.getBrand());
         }
+        carsByPower.remove(car);
         return car;
     }
 
@@ -112,5 +112,7 @@ public class MyGarage implements Garage{
         carsOfBrand.get(car.getBrand()).add(car);
         ownerOfCar.put(car.getCarId(), owner);
         carWithId.put(car.getCarId(), car);
+
+        carsByPower.add(car);
     }
 }
